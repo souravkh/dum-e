@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "DUM-E",
+  "version": "1.0.0",
+  "description": "A lightweight GP test timing and results tracker.",
+  "permissions": [
+    "sidePanel"
+  ],
+  "side_panel": {
+    "default_path": "index.html"
+  },
+  "action": {
+    "default_title": "DUM-E"
+  }
+}

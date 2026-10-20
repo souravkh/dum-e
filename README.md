@@ -22,7 +22,7 @@ A side-panel helper for QA testers who test chatbots through their UI. Load a li
  
 **Sil-Y** is a backronym: **S**tep through prompts, **I**nteract with the chatbot, **L**og the response time, **Y**ield the results.
  
-The unofficial version: it is named after my pet Haley, who was named after Halley's comet. She was silly and goofy, and so is this tool. It does one simple thing, without complaint.
+The unofficial version: it is named after my pet. She was silly and goofy, and so is this tool. It does one simple thing, without complaint.
  
 ---
  
@@ -195,16 +195,6 @@ Tip: **Restart** resets the timer for the current prompt without saving.
 - Timer resolution is one second.
 - Prompts that are pure numbers may be reordered by JavaScript object key ordering.
 - Exports include prompts that were never timed (empty duration).
----
- 
-## Roadmap ideas
- 
-- Save the chatbot response (and a pass/fail note) per prompt
-- Persist sessions with `chrome.storage` so nothing is lost on close
-- Auto-fill the prompt into the chat box and auto-detect when the reply finishes
-- Millisecond-accurate timing
-- CSV/XLSX import with expected answers
-- Previous / Skip buttons
 ---
  
 ## Development

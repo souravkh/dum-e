@@ -16,7 +16,7 @@ function Header() {
           className="text-xl text-right font-bold tracking-wider"
           style={{ color: "#fbbf24" }}
         >
-          DUM-E
+          SIL-Y
         </h5>
 
         <p className="text-xs text-right text-slate-400">

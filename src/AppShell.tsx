@@ -7,6 +7,7 @@ import {
   readPromptsFile,
   type PromptRecord,
 } from "./features/utils/TxtFileReader";
+import TestRunner from "./features/test-runner/TextRunner";
 
 function AppShell() {
   const [promptFile, setPromptFile] = useState<File | null>(null);
@@ -28,15 +29,44 @@ function AppShell() {
     const promptRecord = await readPromptsFile(file);
 
     setPrompts(promptRecord);
-
+    if (promptRecord && typeof promptRecord === 'object') {
+    const keys = Object.keys(promptRecord);
+    if (keys.length > 0) {
+        const firstPrompt = keys[0]; 
+        updateCurrentPrompt(firstPrompt); 
+    }
+}
     console.log(promptRecord);
   }
 
-  const [currentPrompt,setCurrentPrompt]= useState<string>("");
-  const updateCurrentPrompt = (newPrompt:string):void=>{
-    if(newPrompt)
-        setCurrentPrompt(newPrompt)
-  }
+  const [currentPrompt, setCurrentPrompt] = useState<string>("");
+  const updateCurrentPrompt = (newPrompt: string): void => {
+    if (newPrompt) 
+      setCurrentPrompt(newPrompt);
+  };
+
+  const [currentPromptDuration, setCurrentPromptDuration] =
+    useState<string>("");
+
+  const updateCurrentPromptDuration = (duration: string):void => {
+    if (!currentPrompt || duration.trim() === "") return;
+
+    setPrompts((previousPrompts) => ({
+      ...previousPrompts,
+      [currentPrompt]: duration,
+    }));
+
+    const promptList = Object.keys(prompts);
+const currentIndex = promptList.indexOf(currentPrompt);
+const nextPrompt = promptList[currentIndex + 1];
+
+if (nextPrompt) {
+  setCurrentPrompt(nextPrompt);
+  setCurrentPromptDuration("");
+}
+
+    setCurrentPromptDuration("");
+  };
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-950 text-white">
@@ -49,20 +79,22 @@ function AppShell() {
         <PromptManagement
           file={promptFile}
           onFileChange={handlePromptFileChange}
-          
         />
 
         {/* Feature 2: Test Runner */}
         <section className="rounded-lg border border-slate-700 bg-slate-900 p-4">
-          <Prompt promptData={prompts} onSelectedPromptChange={updateCurrentPrompt} />
+          <Prompt
+            promptData={prompts}
+            onSelectedPromptChange={updateCurrentPrompt}
+          />
         </section>
 
         {/* Feature 3: Results */}
         <section className="rounded-lg border border-slate-700 bg-slate-900 p-4">
-          <h2 className="text-lg font-semibold">Results</h2>
-          <p className="mt-1 text-sm text-slate-400">
-            View execution timings and export results.
-          </p>
+          <TestRunner
+            currentPrompt={currentPrompt}
+            onSaving={updateCurrentPromptDuration}
+          />
         </section>
       </main>
 

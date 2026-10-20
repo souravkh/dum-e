@@ -8,6 +8,8 @@ import {
   type PromptRecord,
 } from "./features/utils/TxtFileReader";
 import TestRunner from "./features/test-runner/TextRunner";
+import { exportPrompts } from './features/utils/exportService';
+
 
 function AppShell() {
   const [promptFile, setPromptFile] = useState<File | null>(null);
@@ -22,7 +24,19 @@ function AppShell() {
   };
 
   const [prompts, setPrompts] = useState<PromptRecord>({});
+const [isExporting, setIsExporting] = useState(false);
 
+const handleExport = async (format: 'txt' | 'xlsx') => {
+        try {
+            setIsExporting(true);
+            await exportPrompts(prompts, format, 'my-saved-prompts');
+        } catch (error) {
+            console.error('Export failed:', error);
+            alert('Failed to export prompts.');
+        } finally {
+            setIsExporting(false);
+        }
+    };
   async function handleFileChange(file: File | null) {
     if (!file) return;
 
@@ -81,6 +95,7 @@ if (nextPrompt) {
           onFileChange={handlePromptFileChange}
         />
 
+        {prompts && Object.keys(prompts).length>0 && (<div>
         {/* Feature 2: Test Runner */}
         <section className="rounded-lg border border-slate-700 bg-slate-900 p-4">
           <Prompt
@@ -95,7 +110,28 @@ if (nextPrompt) {
             currentPrompt={currentPrompt}
             onSaving={updateCurrentPromptDuration}
           />
+       <div className="flex flex-row justify-between gap-2">
+  <button
+    type="button"
+    onClick={() => handleExport("txt")}
+    disabled={isExporting}
+    className="rounded-md bg-slate-800 px-3 py-1.5 text-xs font-medium text-slate-200 transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
+  >
+    TXT
+  </button>
+
+  <button
+    type="button"
+    onClick={() => handleExport("xlsx")}
+    disabled={isExporting}
+    className="rounded-md bg-slate-800 px-3 py-1.5 text-xs font-medium text-slate-200 transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
+  >
+    XLSX
+  </button>
+</div>
         </section>
+        </div>)}
+
       </main>
 
       {/* Application Footer */}

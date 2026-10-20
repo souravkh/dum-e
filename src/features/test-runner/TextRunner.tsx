@@ -12,6 +12,11 @@ function TestRunner({currentPrompt, onSaving}: testRunnerProps) {
 
   const [prompt, setPrompt] = useState<string>(currentPrompt);
 
+useEffect(() => {
+  setIsRunning(false);
+  setElapsedSeconds(0);
+}, [currentPrompt]);
+
   useEffect(() => {
     if (!isRunning) return;
 

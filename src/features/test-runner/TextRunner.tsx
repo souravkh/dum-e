@@ -60,10 +60,9 @@ function TestRunner({ currentPrompt, onSaving }: TestRunnerProps) {
   };
 
   return (
-    <section className="rounded-lg border border-slate-700 bg-slate-900 p-4">
-
+    <div className="space-y-4">
       {/* Prompt Block */}
-      <div className="mb-4 rounded-lg border border-slate-700 bg-slate-950 p-3">
+      <div className="rounded-lg border border-slate-700 bg-slate-950 p-3">
         <div className="mb-2 flex items-center justify-end gap-2">
           <button
             type="button"
@@ -135,7 +134,7 @@ function TestRunner({ currentPrompt, onSaving }: TestRunnerProps) {
           Restart
         </button>
       </div>
-    </section>
+    </div>
   );
 }
 

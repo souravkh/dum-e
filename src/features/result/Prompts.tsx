@@ -8,15 +8,15 @@ function Prompt({
   onSelectedPromptChange,
 }: PromptProps) {
   return (
-    <div className="w-full overflow-hidden rounded-xl border border-slate-700 bg-slate-900 shadow-lg">
-      <div className="max-h-64 overflow-auto">
-        <table className="w-full min-w-full border-collapse text-left text-sm text-slate-300">
+    <div className="w-full overflow-hidden rounded-lg">
+      <div className="max-h-60 overflow-y-auto overflow-x-hidden">
+        <table className="w-full table-fixed border-collapse text-left text-sm text-slate-300">
           <thead className="sticky top-0 z-10 bg-slate-800 text-xs uppercase tracking-wider text-amber-400">
             <tr>
-              <th className="px-6 py-4 font-semibold whitespace-nowrap">
+              <th className="px-4 py-3 font-semibold">
                 Prompt
               </th>
-              <th className="px-6 py-4 font-semibold whitespace-nowrap">
+              <th className="w-24 px-4 py-3 font-semibold text-right whitespace-nowrap">
                 Duration
               </th>
             </tr>
@@ -29,13 +29,14 @@ function Prompt({
                   key={gpPrompt}
                   onClick={() => onSelectedPromptChange(gpPrompt)}
                   className="cursor-pointer transition-colors duration-200 hover:bg-slate-800"
+                  title={gpPrompt}
                 >
-                  <td className="px-6 py-4 font-medium text-slate-100 whitespace-nowrap">
+                  <td className="px-4 py-3 font-medium text-slate-100 truncate">
                     {gpPrompt}
                   </td>
 
-                  <td className="px-6 py-4 whitespace-nowrap text-slate-400">
-                    {duration}
+                  <td className="w-24 px-4 py-3 text-right font-mono text-xs text-slate-400 whitespace-nowrap">
+                    {duration || "--:--"}
                   </td>
                 </tr>
               )
@@ -45,7 +46,7 @@ function Prompt({
               <tr>
                 <td
                   colSpan={2}
-                  className="px-6 py-10 text-center text-slate-500"
+                  className="px-4 py-8 text-center text-xs text-slate-500"
                 >
                   No prompts available. Please upload a prompt file.
                 </td>

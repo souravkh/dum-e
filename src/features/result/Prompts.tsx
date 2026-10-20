@@ -1,4 +1,3 @@
-
 type PromptProps = {
   promptData: Record<string, string>;
   onSelectedPromptChange: (prompt: string) => void;
@@ -10,14 +9,14 @@ function Prompt({
 }: PromptProps) {
   return (
     <div className="w-full overflow-hidden rounded-xl border border-slate-700 bg-slate-900 shadow-lg">
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse text-left text-sm text-slate-300">
-          <thead className="bg-slate-800 text-xs uppercase tracking-wider text-amber-400">
+      <div className="max-h-64 overflow-auto">
+        <table className="w-full min-w-full border-collapse text-left text-sm text-slate-300">
+          <thead className="sticky top-0 z-10 bg-slate-800 text-xs uppercase tracking-wider text-amber-400">
             <tr>
-              <th className="px-6 py-4 font-semibold">
+              <th className="px-6 py-4 font-semibold whitespace-nowrap">
                 Prompt
               </th>
-              <th className="px-6 py-4 font-semibold">
+              <th className="px-6 py-4 font-semibold whitespace-nowrap">
                 Duration
               </th>
             </tr>
@@ -31,7 +30,7 @@ function Prompt({
                   onClick={() => onSelectedPromptChange(gpPrompt)}
                   className="cursor-pointer transition-colors duration-200 hover:bg-slate-800"
                 >
-                  <td className="px-6 py-4 font-medium text-slate-100">
+                  <td className="px-6 py-4 font-medium text-slate-100 whitespace-nowrap">
                     {gpPrompt}
                   </td>
 

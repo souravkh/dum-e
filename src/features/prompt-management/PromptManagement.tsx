@@ -1,7 +1,6 @@
-
 import { useRef } from "react";
 import uploadLogo from "../../assets/upload.svg";
-import  txtFileChecker from "../utils/ExtensionHelper"
+import txtFileChecker from "../utils/ExtensionHelper";
 
 type PromptUploadProps = {
   file: File | null;
@@ -16,10 +15,10 @@ function PromptUpload({ file, onFileChange }: PromptUploadProps) {
   ) => {
     const selectedFile = event.target.files?.[0] ?? null;
     const fileName = selectedFile?.name ?? "";
-    if(!txtFileChecker(fileName)){
-        event.target.value = "";
-        return;
-    }        
+    if (!txtFileChecker(fileName)) {
+      event.target.value = "";
+      return;
+    }
     onFileChange(selectedFile);
   };
 

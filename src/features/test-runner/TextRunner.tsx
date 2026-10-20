@@ -1,21 +1,22 @@
 import { useEffect, useState } from "react";
 
-type testRunnerProps={
-    currentPrompt:string,
-    onSaving:(duration:string)=>void
-}
+type TestRunnerProps = {
+  currentPrompt: string;
+  onSaving: (duration: string) => void;
+};
 
-function TestRunner({currentPrompt, onSaving}: testRunnerProps) {
+function TestRunner({ currentPrompt, onSaving }: TestRunnerProps) {
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [elapsedSeconds, setElapsedSeconds] = useState<number>(0);
   const [copied, setCopied] = useState<boolean>(false);
 
   const [prompt, setPrompt] = useState<string>(currentPrompt);
 
-useEffect(() => {
-  setIsRunning(false);
-  setElapsedSeconds(0);
-}, [currentPrompt]);
+  useEffect(() => {
+    setIsRunning(false);
+    setElapsedSeconds(0);
+    setPrompt(currentPrompt);
+  }, [currentPrompt]);
 
   useEffect(() => {
     if (!isRunning) return;
@@ -33,7 +34,7 @@ useEffect(() => {
 
   const handleStop = () => {
     setIsRunning(false);
-    onSaving(formatTime(elapsedSeconds))
+    onSaving(formatTime(elapsedSeconds));
   };
 
   const handleRestart = () => {
@@ -60,18 +61,10 @@ useEffect(() => {
 
   return (
     <section className="rounded-lg border border-slate-700 bg-slate-900 p-4">
-      <div className="mb-4">
-        <h2 className="text-base font-semibold text-white">Test Runner</h2>
-        <p className="mt-1 text-xs text-slate-400">
-          Copy your prompt and measure GP execution time
-        </p>
-      </div>
 
       {/* Prompt Block */}
       <div className="mb-4 rounded-lg border border-slate-700 bg-slate-950 p-3">
-        <div className="mb-2 flex items-center justify-between gap-2">
-         
-
+        <div className="mb-2 flex items-center justify-end gap-2">
           <button
             type="button"
             onClick={handleCopy}
@@ -83,16 +76,16 @@ useEffect(() => {
 
         <textarea
           id="test-prompt"
-          value={currentPrompt}
+          value={prompt}
           onChange={(event) => setPrompt(event.target.value)}
-          rows={5}
+          rows={4}
           placeholder="Current prompt"
           className="w-full resize-y rounded-md border border-slate-700 bg-slate-900 p-3 text-sm leading-6 text-slate-200 outline-none placeholder:text-slate-600 focus:border-sky-500"
         />
       </div>
 
       {/* Timer Display */}
-      <div className="rounded-lg bg-slate-950 px-4 py-6 text-center">
+      <div className="rounded-lg bg-slate-950 px-2 py-4 text-center">
         <p className="mb-2 text-xs uppercase tracking-widest text-slate-500">
           Elapsed Time
         </p>

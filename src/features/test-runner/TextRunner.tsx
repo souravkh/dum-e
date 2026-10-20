@@ -7,14 +7,14 @@ type TestRunnerProps = {
 
 function TestRunner({ currentPrompt, onSaving }: TestRunnerProps) {
   const [isRunning, setIsRunning] = useState<boolean>(false);
-  const [elapsedSeconds, setElapsedSeconds] = useState<number>(0);
+  const [elapsedMs, setElapsedMs] = useState<number>(0);
   const [copied, setCopied] = useState<boolean>(false);
 
   const [prompt, setPrompt] = useState<string>(currentPrompt);
 
   useEffect(() => {
     setIsRunning(false);
-    setElapsedSeconds(0);
+    setElapsedMs(0);
     setPrompt(currentPrompt);
   }, [currentPrompt]);
 
@@ -22,8 +22,8 @@ function TestRunner({ currentPrompt, onSaving }: TestRunnerProps) {
     if (!isRunning) return;
 
     const intervalId = window.setInterval(() => {
-      setElapsedSeconds((seconds) => seconds + 1);
-    }, 1000);
+      setElapsedMs((ms) => ms + 10);
+    }, 10);
 
     return () => window.clearInterval(intervalId);
   }, [isRunning]);
@@ -34,12 +34,12 @@ function TestRunner({ currentPrompt, onSaving }: TestRunnerProps) {
 
   const handleStop = () => {
     setIsRunning(false);
-    onSaving(formatTime(elapsedSeconds));
+    onSaving(formatTime(elapsedMs));
   };
 
   const handleRestart = () => {
     setIsRunning(false);
-    setElapsedSeconds(0);
+    setElapsedMs(0);
   };
 
   const handleCopy = async () => {
@@ -52,11 +52,12 @@ function TestRunner({ currentPrompt, onSaving }: TestRunnerProps) {
     }
   };
 
-  const formatTime = (totalSeconds: number) => {
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
+  const formatTime = (totalMs: number) => {
+    const minutes = Math.floor(totalMs / 60000);
+    const seconds = Math.floor((totalMs % 60000) / 1000);
+    const milliseconds = Math.floor((totalMs % 1000) / 10);
 
-    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}:${String(milliseconds).padStart(2, "0")}`;
   };
 
   return (
@@ -90,7 +91,7 @@ function TestRunner({ currentPrompt, onSaving }: TestRunnerProps) {
         </p>
 
         <p className="font-mono text-4xl font-semibold tabular-nums text-white">
-          {formatTime(elapsedSeconds)}
+          {formatTime(elapsedMs)}
         </p>
 
         <div className="mt-3 flex items-center justify-center gap-2">

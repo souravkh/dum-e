@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "DUM-E",
+  "name": "SIL-Y",
   "version": "1.0.0",
   "description": "A lightweight GP test timing and results tracker.",
   "permissions": [
@@ -10,6 +10,6 @@
     "default_path": "index.html"
   },
   "action": {
-    "default_title": "DUM-E"
+    "default_title": "SIL-Y"
   }
 }

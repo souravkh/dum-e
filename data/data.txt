@@ -1,0 +1,11 @@
+Explain the difference between a list and a tuple in Python with examples.
+
+Summarize the key benefits of using Azure Functions in five bullet points.
+
+Write a C# method that checks whether a string is a palindrome, and explain the logic.
+
+Explain Retrieval-Augmented Generation (RAG), including document chunking, embeddings, vector search, and response generation.
+
+Review this ASP.NET Core API endpoint for potential security issues, error handling problems, and performance bottlenecks. Suggest improvements.
+
+Design a production-ready architecture for a document question-answering application using React, ASP.NET Core, Azure AI services, Azure Blob Storage, and a vector database. Explain the trade-offs and failure-handling strategy.

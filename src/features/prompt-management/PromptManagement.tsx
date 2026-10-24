@@ -4,10 +4,11 @@ import txtFileChecker from "../utils/ExtensionHelper";
 
 type PromptUploadProps = {
   file: File | null;
+  promptCount: number;
   onFileChange: (file: File | null) => void;
 };
 
-function PromptUpload({ file, onFileChange }: PromptUploadProps) {
+function PromptUpload({ file, promptCount, onFileChange }: PromptUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (
@@ -22,14 +23,48 @@ function PromptUpload({ file, onFileChange }: PromptUploadProps) {
     onFileChange(selectedFile);
   };
 
+  if (file && promptCount > 0) {
+    return (
+      <div className="flex min-w-0 items-center gap-2 text-xs">
+        <span className="min-w-0 flex-1 truncate font-medium text-[var(--ink)]" title={`${file.name} · ${promptCount} prompts`}>
+          {file.name} · {promptCount} prompts
+        </span>
+        <button
+          type="button"
+          onClick={() => inputRef.current?.click()}
+          className="shrink-0 cursor-pointer font-semibold text-[var(--accent)] underline-offset-2 hover:underline"
+        >
+          Change
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            if (inputRef.current) inputRef.current.value = "";
+            onFileChange(null);
+          }}
+          className="shrink-0 cursor-pointer text-[var(--muted)] underline-offset-2 hover:text-[var(--ink)] hover:underline"
+        >
+          Reset
+        </button>
+        <input
+          ref={inputRef}
+          type="file"
+          accept=".txt,text/plain"
+          hidden
+          onChange={handleFileChange}
+        />
+      </div>
+    );
+  }
+
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex min-w-0 items-center gap-2">
       <input
         type="text"
         readOnly
         value={file?.name ?? ""}
-        placeholder="Please select a .txt file to upload prompt!"
-        className="min-w-0 flex-1 truncate rounded-md border border-[var(--line-strong)] bg-[var(--surface-soft)] p-2 text-sm text-[var(--ink)] placeholder:text-[var(--muted)]"
+        placeholder="Choose a .txt file"
+        className="min-w-0 flex-1 truncate rounded-md border border-[var(--line-strong)] bg-[var(--surface-soft)] px-2 py-1.5 text-xs text-[var(--ink)] placeholder:text-[var(--muted)]"
       />
 
       {/* Actual file input */}
@@ -45,9 +80,10 @@ function PromptUpload({ file, onFileChange }: PromptUploadProps) {
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
-        className="shrink-0 cursor-pointer rounded-lg border border-[var(--line)] bg-[var(--surface-solid)] p-2 transition hover:bg-[var(--accent-soft)]"
+        aria-label="Choose a .txt file"
+        className="shrink-0 cursor-pointer rounded-lg border border-[var(--line)] bg-[var(--surface-solid)] p-1.5 transition hover:bg-[var(--accent-soft)]"
       >
-        <img src={uploadLogo} alt="Upload file" className="h-6 w-6" />
+        <img src={uploadLogo} alt="" className="h-5 w-5" />
       </button>
 
       <button
@@ -57,7 +93,7 @@ function PromptUpload({ file, onFileChange }: PromptUploadProps) {
           onFileChange(null);
         }}
         disabled={!file}
-        className="shrink-0 cursor-pointer rounded-lg border border-[var(--line)] bg-[var(--surface-solid)] px-3 py-2 text-sm font-medium text-[var(--ink)] transition hover:bg-[var(--accent-soft)] disabled:cursor-not-allowed disabled:opacity-40"
+        className="shrink-0 cursor-pointer rounded-lg border border-[var(--line)] bg-[var(--surface-solid)] px-2 py-1.5 text-xs font-medium text-[var(--ink)] transition hover:bg-[var(--accent-soft)] disabled:cursor-not-allowed disabled:opacity-40"
       >
         Reset
       </button>

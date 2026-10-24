@@ -1,35 +1,49 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type TestRunnerProps = {
   currentPrompt: string;
+  currentIndex: number;
+  total: number;
   onSaving: (duration: string) => void;
 };
 
-function TestRunner({ currentPrompt, onSaving }: TestRunnerProps) {
+function TestRunner({ currentPrompt, currentIndex, total, onSaving }: TestRunnerProps) {
   const [isRunning, setIsRunning] = useState<boolean>(false);
   const [elapsedMs, setElapsedMs] = useState<number>(0);
   const [copied, setCopied] = useState<boolean>(false);
+  const startTimestamp = useRef<number | null>(null);
+  const elapsedBeforeStart = useRef<number>(0);
 
   useEffect(() => {
-    if (!isRunning) return;
+    if (!isRunning || startTimestamp.current === null) return;
 
     const intervalId = window.setInterval(() => {
-      setElapsedMs((ms) => ms + 10);
-    }, 10);
+      setElapsedMs(elapsedBeforeStart.current + Date.now() - startTimestamp.current!);
+    }, 250);
 
     return () => window.clearInterval(intervalId);
   }, [isRunning]);
 
   const handleStart = () => {
+    elapsedBeforeStart.current = elapsedMs;
+    startTimestamp.current = Date.now();
     setIsRunning(true);
   };
 
   const handleStop = () => {
+    const totalElapsed = startTimestamp.current === null
+      ? elapsedMs
+      : elapsedBeforeStart.current + Date.now() - startTimestamp.current;
+    startTimestamp.current = null;
+    elapsedBeforeStart.current = totalElapsed;
+    setElapsedMs(totalElapsed);
     setIsRunning(false);
-    onSaving(formatTime(elapsedMs));
+    onSaving(formatSavedTime(totalElapsed));
   };
 
   const handleRestart = () => {
+    startTimestamp.current = null;
+    elapsedBeforeStart.current = 0;
     setIsRunning(false);
     setElapsedMs(0);
   };
@@ -44,88 +58,72 @@ function TestRunner({ currentPrompt, onSaving }: TestRunnerProps) {
     }
   };
 
-  const formatTime = (totalMs: number) => {
+  const formatSavedTime = (totalMs: number) => {
     const minutes = Math.floor(totalMs / 60000);
     const seconds = Math.floor((totalMs % 60000) / 1000);
     const milliseconds = Math.floor((totalMs % 1000) / 10);
-
     return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}:${String(milliseconds).padStart(2, "0")}`;
   };
 
   return (
-    <div className="space-y-3">
-      {/* Prompt Block */}
-      <div className="rounded-lg border border-[var(--line)] bg-[var(--surface-soft)] p-2.5 shadow-[var(--shadow-glass)] backdrop-blur-xl">
-        <div className="mb-1.5 flex items-center justify-end gap-2">
+    <div className="space-y-2">
+      <div className="relative rounded-lg border border-[var(--line)] bg-[var(--surface-soft)] p-2 shadow-[var(--shadow-glass)] backdrop-blur-md">
+        <div className="mb-1 pr-9 text-xs font-medium text-[var(--muted)]">
+          Prompt {currentIndex} of {total}
+        </div>
+        <p
+          title={currentPrompt}
+          className="whitespace-pre-wrap break-words text-sm leading-5 text-[var(--ink)]"
+        >
+          {currentPrompt || "Choose a prompt from the list."}
+        </p>
           <button
             type="button"
             onClick={handleCopy}
-            className="shrink-0 rounded-md bg-[var(--surface-solid)] px-3 py-1.5 text-xs font-medium text-[var(--ink)] transition hover:bg-[var(--accent-soft)]"
+            aria-label={copied ? "Prompt copied" : "Copy prompt"}
+            title={copied ? "Copied" : "Copy prompt"}
+            className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-md border border-[var(--line)] bg-[var(--surface-solid)] text-[var(--ink)] transition hover:bg-[var(--accent-soft)]"
           >
-            {copied ? "Copied!" : "Copy prompt"}
+            {copied ? (
+              <svg aria-hidden="true" viewBox="0 0 20 20" fill="none" className="h-4 w-4 text-emerald-500">
+                <path d="m4 10 4 4 8-8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            ) : (
+              <svg aria-hidden="true" viewBox="0 0 20 20" fill="none" className="h-4 w-4">
+                <rect x="7" y="7" width="9" height="10" rx="1.5" stroke="currentColor" strokeWidth="1.5" />
+                <path d="M13 7V5.5A1.5 1.5 0 0 0 11.5 4h-6A1.5 1.5 0 0 0 4 5.5v7A1.5 1.5 0 0 0 5.5 14H7" stroke="currentColor" strokeWidth="1.5" />
+              </svg>
+            )}
           </button>
-        </div>
-
-        <textarea
-          id="test-prompt"
-          value={currentPrompt}
-          readOnly
-          rows={3}
-          placeholder="Current prompt"
-          className="w-full resize-y rounded-md border border-[var(--line-strong)] bg-[var(--surface)]/80 p-2.5 text-sm leading-5 text-[var(--ink)] outline-none placeholder:text-[var(--muted)]"
-        />
       </div>
 
-      {/* Timer Display */}
-      <div className="rounded-lg border border-[var(--line)] bg-[var(--surface-soft)] px-2 py-3 text-center shadow-[var(--shadow-glass)] backdrop-blur-xl">
-        <p className="mb-1 text-[11px] uppercase tracking-widest text-[var(--muted)]">
-          Elapsed Time
-        </p>
-
-        <p className="font-mono text-3xl font-semibold tabular-nums text-[var(--ink)]">
-          {formatTime(elapsedMs)}
-        </p>
-
-        <div className="mt-2 flex items-center justify-center gap-2">
-          <span
-            className={`h-2 w-2 rounded-full ${
-              isRunning ? "bg-emerald-500" : "bg-slate-600"
-            }`}
-          />
-
-          <span className="text-xs text-[var(--muted)]">
-            {isRunning ? "Timer running" : "Timer stopped"}
+      <div className="flex items-center justify-start gap-3 rounded-lg border border-[var(--line)] bg-[var(--surface-soft)] px-2 py-1.5 shadow-[var(--shadow-glass)] backdrop-blur-md">
+        <div className="flex min-w-0 items-center gap-2">
+          <span className={`h-2 w-2 shrink-0 rounded-full ${isRunning ? "animate-pulse bg-emerald-500" : "bg-slate-500"}`} aria-hidden="true" />
+          <span className="font-mono text-2xl font-semibold tabular-nums text-[var(--ink)]">
+            {formatSavedTime(elapsedMs)}
           </span>
         </div>
-      </div>
-
-      {/* Timer Controls */}
-      <div className="grid grid-cols-3 gap-2">
-        <button
-          type="button"
-          onClick={handleStart}
-          disabled={isRunning}
-          className="rounded-md bg-sky-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-sky-500 disabled:cursor-not-allowed disabled:opacity-40"
-        >
-          Start
-        </button>
-
-        <button
-          type="button"
-          onClick={handleStop}
-          disabled={!isRunning}
-          className="rounded-md bg-slate-700 px-3 py-2 text-sm font-medium text-white transition hover:bg-slate-600 disabled:cursor-not-allowed disabled:opacity-40"
-        >
-          Stop
-        </button>
-
-        <button
-          type="button"
-          onClick={handleRestart}
-          className="rounded-md bg-red-700 px-3 py-2 text-sm font-medium text-white transition hover:bg-red-600"
-        >
-          Restart
-        </button>
+        <div className="ml-auto flex shrink-0 items-center gap-2">
+          <button
+            type="button"
+            onClick={isRunning ? handleStop : handleStart}
+            className="rounded-md bg-[var(--accent)] px-4 py-1.5 text-sm font-semibold text-white transition hover:brightness-110"
+          >
+            {isRunning ? "Stop" : "Start"}
+          </button>
+          <button
+            type="button"
+            onClick={handleRestart}
+            aria-label="Reset timer"
+            title="Reset timer"
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-[var(--line)] text-[var(--muted)] transition hover:bg-[var(--accent-soft)] hover:text-[var(--ink)]"
+          >
+            <svg aria-hidden="true" viewBox="0 0 20 20" fill="none" className="h-4 w-4">
+              <path d="M4 5v4h4M4.8 8A5.5 5.5 0 1 1 5 12" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
   );

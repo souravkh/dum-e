@@ -9,6 +9,7 @@ Sil-Y is a Chrome side-panel extension for QA testers who test chatbots through 
 [![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white)](https://github.com/souravkh/sil-y)
 [![Manifest V3](https://img.shields.io/badge/Manifest-V3-green?style=for-the-badge)](https://github.com/souravkh/sil-y/blob/main/public/manifest.json)
 
+[demo.gif](./demo/demo.gif) file.
  
 ---
  
@@ -38,6 +39,8 @@ When you test a chatbot through its UI, you usually juggle three things at once:
  
 The stopwatch is optional. If you only need a prompt runner, ignore the timer.
  
+
+
 ---
  
 ## Features

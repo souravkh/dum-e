@@ -1,9 +1,9 @@
 function Footer() {
   return (
-    <footer className="flex items-center justify-center border-t border-slate-700 bg-slate-900 px-3 py-2">
+    <footer className="flex min-h-11 items-center justify-center border-t border-[var(--line)] bg-[var(--surface-soft)] px-3 py-2 text-[var(--muted)] backdrop-blur-xl">
       {/* Toolkit information */}
-      <p className="text-xs text-slate-400">
-        SIL-Y <span className="text-slate-600">|</span> v1.0.0
+      <p className="text-xs text-[var(--muted)]">
+        SIL-Y <span className="text-[var(--muted)]">|</span> v1.0.0
       </p>
     </footer>
   );

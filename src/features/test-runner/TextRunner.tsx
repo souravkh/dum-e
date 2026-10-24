@@ -10,14 +10,6 @@ function TestRunner({ currentPrompt, onSaving }: TestRunnerProps) {
   const [elapsedMs, setElapsedMs] = useState<number>(0);
   const [copied, setCopied] = useState<boolean>(false);
 
-  const [prompt, setPrompt] = useState<string>(currentPrompt);
-
-  useEffect(() => {
-    setIsRunning(false);
-    setElapsedMs(0);
-    setPrompt(currentPrompt);
-  }, [currentPrompt]);
-
   useEffect(() => {
     if (!isRunning) return;
 
@@ -44,7 +36,7 @@ function TestRunner({ currentPrompt, onSaving }: TestRunnerProps) {
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(prompt);
+      await navigator.clipboard.writeText(currentPrompt);
       setCopied(true);
       window.setTimeout(() => setCopied(false), 1500);
     } catch {
@@ -61,14 +53,14 @@ function TestRunner({ currentPrompt, onSaving }: TestRunnerProps) {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {/* Prompt Block */}
-      <div className="rounded-lg border border-slate-700 bg-slate-950 p-3">
-        <div className="mb-2 flex items-center justify-end gap-2">
+      <div className="rounded-lg border border-[var(--line)] bg-[var(--surface-soft)] p-2.5 shadow-[var(--shadow-glass)] backdrop-blur-xl">
+        <div className="mb-1.5 flex items-center justify-end gap-2">
           <button
             type="button"
             onClick={handleCopy}
-            className="shrink-0 rounded-md bg-slate-800 px-3 py-1.5 text-xs font-medium text-slate-200 transition hover:bg-slate-700"
+            className="shrink-0 rounded-md bg-[var(--surface-solid)] px-3 py-1.5 text-xs font-medium text-[var(--ink)] transition hover:bg-[var(--accent-soft)]"
           >
             {copied ? "Copied!" : "Copy prompt"}
           </button>
@@ -76,39 +68,39 @@ function TestRunner({ currentPrompt, onSaving }: TestRunnerProps) {
 
         <textarea
           id="test-prompt"
-          value={prompt}
-          onChange={(event) => setPrompt(event.target.value)}
-          rows={4}
+          value={currentPrompt}
+          readOnly
+          rows={3}
           placeholder="Current prompt"
-          className="w-full resize-y rounded-md border border-slate-700 bg-slate-900 p-3 text-sm leading-6 text-slate-200 outline-none placeholder:text-slate-600 focus:border-sky-500"
+          className="w-full resize-y rounded-md border border-[var(--line-strong)] bg-[var(--surface)]/80 p-2.5 text-sm leading-5 text-[var(--ink)] outline-none placeholder:text-[var(--muted)]"
         />
       </div>
 
       {/* Timer Display */}
-      <div className="rounded-lg bg-slate-950 px-2 py-4 text-center">
-        <p className="mb-2 text-xs uppercase tracking-widest text-slate-500">
+      <div className="rounded-lg border border-[var(--line)] bg-[var(--surface-soft)] px-2 py-3 text-center shadow-[var(--shadow-glass)] backdrop-blur-xl">
+        <p className="mb-1 text-[11px] uppercase tracking-widest text-[var(--muted)]">
           Elapsed Time
         </p>
 
-        <p className="font-mono text-4xl font-semibold tabular-nums text-white">
+        <p className="font-mono text-3xl font-semibold tabular-nums text-[var(--ink)]">
           {formatTime(elapsedMs)}
         </p>
 
-        <div className="mt-3 flex items-center justify-center gap-2">
+        <div className="mt-2 flex items-center justify-center gap-2">
           <span
             className={`h-2 w-2 rounded-full ${
               isRunning ? "bg-emerald-500" : "bg-slate-600"
             }`}
           />
 
-          <span className="text-xs text-slate-400">
+          <span className="text-xs text-[var(--muted)]">
             {isRunning ? "Timer running" : "Timer stopped"}
           </span>
         </div>
       </div>
 
       {/* Timer Controls */}
-      <div className="mt-4 grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-3 gap-2">
         <button
           type="button"
           onClick={handleStart}

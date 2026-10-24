@@ -8,12 +8,15 @@ type HeaderProps = {
 function Header({ theme, onToggleTheme }: HeaderProps) {
   return (
     <header className="relative z-10 flex h-11 w-full shrink-0 items-center justify-between border-b border-[var(--line)] bg-[var(--surface-soft)] px-3 backdrop-blur-md">
-      <div className="flex min-w-0 items-center gap-2">
+      <div className="flex min-w-0 items-center gap-1.5">
         <img src={logo} alt="" className="h-6 w-6 shrink-0" />
-        <span className="truncate text-sm font-bold tracking-wider text-amber-500">
+        <span className="shrink-0 text-sm font-bold tracking-wider text-amber-500">
           SIL-Y
         </span>
-        <span className="text-[10px] text-[var(--muted)]">v1.0.0</span>
+        <span className="shrink-0 text-[10px] text-[var(--muted)]">v1.0.0</span>
+        <span className="min-w-0 truncate text-[10px] text-[var(--muted)]">
+          GP Prompt Test Toolkit
+        </span>
       </div>
 
       <button
